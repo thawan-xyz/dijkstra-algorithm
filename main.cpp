@@ -66,14 +66,14 @@ public:
         return edges;
     }
 
-    array<int> dijkstra(int x) {
-        array<int> leader(VERTICES, -1), length(VERTICES, INT_MAX);
+    pair<array<int>, array<int>> dijkstra(int x) {
+        array<int> predecessor(VERTICES, -1), distance(VERTICES, INT_MAX);
         marked.assign(VERTICES, false);
 
         priority_queue<edge> edge_priority;
         edge_priority.push({x, x, 0});
 
-        leader[x] = x, length[x] = 0;
+        predecessor[x] = x, distance[x] = 0;
         for (int i = 0; i < VERTICES - 1; ++i) {
             do {
                 if (edge_priority.empty()) goto end;
@@ -82,14 +82,14 @@ public:
             } while (is_marked(x)); set_mark(x);
 
             for (auto [y, w] : adjacency[x]) {
-                if (!is_marked(y) && length[x] + w < length[y]) {
-                    leader[y] = x, length[y] = length[x] + w;
+                if (!is_marked(y) && distance[x] + w < distance[y]) {
+                    predecessor[y] = x, distance[y] = distance[x] + w;
 
-                    edge_priority.push({x, y, length[y]});
+                    edge_priority.push({x, y, distance[y]});
                 }
             }
         }
-        end: return length;
+        end: return {predecessor, distance};
     }
 };
 
